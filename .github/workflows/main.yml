@@ -29,6 +29,11 @@ jobs:
         run: node calculate_coverage.js
         id: coverage_percentage
 
+      # Display the coverage percentage
+      - name: Display coverage
+        run: echo Coverage_percentage:${{ steps.coverage_percentage.outputs.coverage }}%
+
+
       - name: Set Status Check
         if: ${{ steps.coverage_percentage.outputs.coverage < 95 }}
         uses: actions/github-script@0.9.0
