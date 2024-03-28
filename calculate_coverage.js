@@ -15,3 +15,6 @@ console.debug(`Total Coverage: ${avgCoverage.toFixed(2)} %`);
 
 // Write coverage percentage to a file
 fs.writeFileSync("coverage.txt", avgCoverage.toFixed(2));
+
+// Set coverage percentage as an output
+console.log(`::set-output name=coverage_percentage::${avgCoverage.toFixed(2)}`);
