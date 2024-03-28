@@ -25,63 +25,37 @@ jobs:
           name: coverage-report
           path: coverage
 
-      - name: Get Coverage Percentage
+      - name: Calculate Coverage Percentage
+        run: node calculate_coverage.js
         id: coverage_percentage
-        run: |
-          const fs = require("fs");
 
-          // Read the JSON coverage report file
-          const coverageReport = JSON.parse(
-            fs.readFileSync("coverage/coverage-summary.json", "utf8")
-          );
-
-          const totalSum = ["lines", "statements", "functions", "branches"]
-            .map((i) => coverageReport.total[i].pct)
-            .reduce((a, b) => a + b, 0);
-          const avgCoverage = totalSum / 4;
-
-          // Output coverage percentage
-          console.log(`::set-output name=coverage::${avgCoverage.toFixed(2)}`);
-
-      - name: Display Coverage Percentage
-        run: |
-          echo "Coverage Percentage: ${{ steps.coverage_percentage.outputs.coverage }} %"
-          
- 
       - name: Set Status Check
         if: ${{ steps.coverage_percentage.outputs.coverage < 80 }}
         uses: actions/github-script@0.9.0
         with:
-           github-token: ${{ secrets.GITHUB_TOKEN }}
-           script: |
-             const coverage = parseFloat('${{ steps.coverage_percentage.outputs.coverage }}');
-             const status = coverage >= 80 ? 'success' : 'failure';
-             const description = coverage >= 80 ? 'Code coverage is acceptable.' : 'Code coverage is less than 80%. Please improve code coverage before merging.';
-             github.repos.createStatus({
-             ...context.repo,
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const coverage = parseFloat('${{ steps.coverage_percentage.outputs.coverage }}');
+            const status = coverage >= 80 ? 'success' : 'failure';
+            const description = coverage >= 80 ? 'Code coverage is acceptable.' : 'Code coverage is less than 80%. Please improve code coverage before merging.';
+            github.repos.createStatus({
+              ...context.repo,
               sha: context.sha,
               state: status,
               description: description,
               context: "Code Coverage"
-              })
+            })
 
-      - name : Finalize Status Check
+      - name: Finalize Status Check
         if: ${{ steps.coverage_percentage.outputs.coverage >= 80 }}
         uses: actions/github-script@0.9.0
         with:
-           github-token: ${{ secrets.GITHUB_TOKEN }}
-           script: |
-             github.repos.createStatus({
-             ...context.repo,
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            github.repos.createStatus({
+              ...context.repo,
               sha: context.sha,
               state: 'success',
               description: 'Code coverage is acceptable.',
               context: "Code Coverage"
-              })
-
-
-      
-
- 
-       
-        
+            })

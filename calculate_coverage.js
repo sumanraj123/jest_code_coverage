@@ -12,3 +12,6 @@ const avgCoverage = totalSum / 4;
 console.debug();
 console.debug("========= Total Coverage ============");
 console.debug(`Total Coverage: ${avgCoverage.toFixed(2)} %`);
+
+// Write coverage percentage to a file
+fs.writeFileSync("coverage.txt", avgCoverage.toFixed(2));
