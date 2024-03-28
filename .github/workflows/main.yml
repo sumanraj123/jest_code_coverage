@@ -29,9 +29,14 @@ jobs:
         run: node calculate_coverage.js
         id: coverage_percentage
 
+      # Set the coverage percentage as an output
+      - name: Set coverage output
+        run: echo "::set-output name=coverage::$(cat coverage.txt)"
+        id: set_coverage_output
+
       # Display the coverage percentage
       - name: Display coverage
-        run: echo Coverage_percentage:${{steps.coverage_percentag.outputs}}%
+        run: echo Coverage_percentage:${{steps.coverage_percentage.outputs}}
 
 
       - name: Set Status Check
