@@ -31,7 +31,7 @@ jobs:
 
        # Use the coverage percentage output in other steps
       - name: Display coverage
-        run: echo Coverage percentage:${{ steps.coverage_percentage.outputs.coverage_percentage}}%
+        run: echo Coverage percentage:${{ steps.coverage_percentage.outputs.coverage_percentage}}
 
   
       - name: Set Status Check

@@ -11,10 +11,12 @@ const totalSum = ["lines", "statements", "functions", "branches"]
 const avgCoverage = totalSum / 4;
 console.debug();
 console.debug("========= Total Coverage ============");
-console.debug(`Total Coverage: ${typeof(parseInt(avgCoverage.toFixed(2)))}`);
+console.debug(`Total Coverage: ${parseInt(avgCoverage.toFixed(2))}`);
 
 // Write coverage percentage to a file
-fs.writeFileSync("coverage.txt", avgCoverage.toFixed(2));
+fs.writeFileSync("coverage.txt", parseInt(avgCoverage.toFixed(2)));
 
 // Set coverage percentage as an output
-console.log(`::set-output name=coverage_percentage::${avgCoverage.toFixed(2)}`);
+console.log(
+  `::set-output name=coverage_percentage::${parseInt(avgCoverage.toFixed(2))}`
+);
