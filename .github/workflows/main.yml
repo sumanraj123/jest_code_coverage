@@ -31,16 +31,12 @@ jobs:
 
        # Use the coverage percentage output in other steps
       - name: Display coverage
-        run: echo Coverage percentage:${{ steps.coverage_percentage.outputs.coverage_percentage }}%
+        run: echo Coverage percentage:${{ steps.coverage_percentage.outputs.coverage_percentage}}%
 
-      # Set the coverage percentage as an output
-      - name: Set coverage output
-        run: echo "::set-output name=coverage::$(cat coverage.txt)"
-        id: set_coverage_output
-
-     
+    
       - name: Set Status Check
-        if: ${{ steps.coverage_percentage.outputs.coverage_percentage < 95 }}
+        if: ${{  parseFloat('${{ steps.coverage_percentage.outputs.coverage_percentage }}') < 95 }}
+        
         uses: actions/github-script@0.9.0
         with:
           github-token: ${{ secrets.GIT_TOKEN }}
