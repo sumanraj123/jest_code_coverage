@@ -1,7 +1,7 @@
 name: Jest code coverage
 
 on:
-  push:
+  pull_request:
     branches:
       - main
 
@@ -26,6 +26,33 @@ jobs:
           path: coverage
           
       - name: Display Coverage Percentage
-        run: node calculate_coverage.js
+        id: coverage_percentage
+        run: echo Coverage Percentage:${{ steps.coverageReport.outputs.coverage }}
 
+      - name: Set Status Check
+        if: ${{ steps.coverage_percentage.outputs.coverage < 80 }}
+        uses: actions/github-script@0.9.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            github.repos.createStatus({
+              ...context.repo,
+              sha: github.context.payload.pull_request.head.sha,
+              state: "failure",
+              description: "Code coverage is less than 80%. Please improve code coverage before merging.",
+              context: "Code Coverage"
+            })
 
+      - name: Finalize Status Check
+        if: ${{ steps.coverage_percentage.outputs.coverage >= 80 }}
+        uses: actions/github-script@0.9.0
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            github.repos.createStatus({
+              ...context.repo,
+              sha: github.context.payload.pull_request.head.sha,
+              state: "success",
+              description: "Code coverage is acceptable.",
+              context: "Code Coverage"
+            })
