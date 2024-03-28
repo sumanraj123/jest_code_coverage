@@ -33,13 +33,14 @@ jobs:
         if: ${{ steps.coverage_percentage.outputs.coverage < 80 }}
         uses: actions/github-script@0.9.0
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.GIT_TOKEN }}
           script: |
             const coverage = parseFloat('${{ steps.coverage_percentage.outputs.coverage }}');
             const status = coverage >= 80 ? 'success' : 'failure';
             const description = coverage >= 80 ? 'Code coverage is acceptable.' : 'Code coverage is less than 80%. Please improve code coverage before merging.';
             github.repos.createStatus({
-              ...context.repo,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
               sha: context.sha,
               state: status,
               description: description,
@@ -50,10 +51,11 @@ jobs:
         if: ${{ steps.coverage_percentage.outputs.coverage >= 80 }}
         uses: actions/github-script@0.9.0
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.GIT_TOKEN }}
           script: |
             github.repos.createStatus({
-              ...context.repo,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
               sha: context.sha,
               state: 'success',
               description: 'Code coverage is acceptable.',
