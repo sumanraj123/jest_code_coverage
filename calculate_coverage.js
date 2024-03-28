@@ -14,7 +14,7 @@ console.debug("========= Total Coverage ============");
 console.debug(`Total Coverage: ${parseInt(avgCoverage.toFixed(2))}`);
 
 // Write coverage percentage to a file
-fs.writeFileSync("coverage.txt", parseInt(avgCoverage.toFixed(2)));
+fs.writeFileSync("coverage.txt", avgCoverage.toFixed(2));
 
 // Set coverage percentage as an output
 console.log(
