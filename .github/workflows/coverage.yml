@@ -1,5 +1,4 @@
-# Your CI/CD workflow file
-name: Update Coverage Badge
+name: Update Commit Status Check with Coverage Badge
 
 on:
   pull_request:
@@ -7,7 +6,7 @@ on:
       - main
 
 jobs:
-  update-badge:
+  update-commit-status-check:
     runs-on: ubuntu-latest
 
     steps:
@@ -25,20 +24,18 @@ jobs:
         id: coverage_percentage
         run: |
           # Your script to extract coverage percentage
+          # For example, you might read it from a file
           coverage=$(cat coverage/coverage-summary.json | jq '.total.lines.pct')
           echo "::set-output name=coverage_percentage::$coverage"
 
-      # Update badge URL in README.md
-      - name: Update badge URL
+      # Update commit status check with badge URL
+      - name: Update commit status check with badge URL
+        if: always()  # Update the commit status check even if previous steps fail
         run: |
           coverage_percentage=$(echo ${{ steps.coverage_percentage.outputs.coverage_percentage }})
           badge_url="https://img.shields.io/badge/coverage-${coverage_percentage}%25-brightgreen"
-          sed -i "s|!\[Code Coverage\].*|![Code Coverage]($badge_url)|" README.md
-        # Only run when coverage percentage is available
-        if: steps.coverage_percentage.outputs.coverage_percentage != ''
-
-      # Commit and push changes
-      - name: Commit and push changes
-        uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          commit_message: Update code coverage badge
+          description="![Code Coverage]($badge_url)\n\nCoverage: $coverage_percentage%"
+          echo "$description" > coverage_badge.md
+          git add coverage_badge.md
+          git commit -m "Update code coverage badge"
+          git push origin HEAD:${GITHUB_REF}
