@@ -36,6 +36,8 @@ jobs:
           badge_url="https://img.shields.io/badge/coverage-${coverage_percentage}%25-brightgreen"
           description="![Code Coverage]($badge_url)\n\nCoverage: $coverage_percentage%"
           echo "$description" > coverage_badge.md
+          git config user.name 'sumanraj123'
+          git config user.email 'sumanravi1124@gmail.com'
           git add coverage_badge.md
           git commit -m "Update code coverage badge"
           git push origin HEAD:${GITHUB_REF}
