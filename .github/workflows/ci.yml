@@ -49,9 +49,12 @@ jobs:
         run: |
           coverage_percentage="${{ steps.coverage_percentage.outputs.coverage_percentage }}"
           if [ "$coverage_percentage" -ge 80 ]; then
-            color="brightgreen"
+          color="brightgreen"
           else
-            color="red"
+          color="red"
+          fi
+          badge_url="https://img.shields.io/badge/coverage-${coverage_percentage}%25-$color"
+          echo "$badge_url" > badge_url.txt
 
       # Generate badge URL
       - name: Generate badge URL
