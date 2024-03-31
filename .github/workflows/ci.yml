@@ -43,16 +43,37 @@ jobs:
       - name: Display coverage
         run: echo Coverage percentage:${{ steps.coverage_percentage.outputs.coverage_percentage}}
 
-      # Comment on pull request with coverage percentage using GitHub API
-      - name: Comment on pull request with coverage percentage
+      # Determine badge color based on coverage percentage
+      - name: Determine badge color
+        id: badge_color
+        run: |
+          coverage_percentage="${{ steps.coverage_percentage.outputs.coverage_percentage }}"
+          if [ "$coverage_percentage" -ge 80 ]; then
+            color="brightgreen"
+          else
+            color="red"
+          fi
+          echo "::set-output name=badge_color::$color"
+
+      # Generate badge URL
+      - name: Generate badge URL
+        id: badge_url
+        run: |
+          coverage_percentage="${{ steps.coverage_percentage.outputs.coverage_percentage }}"
+          badge_color="${{ steps.badge_color.outputs.badge_color }}"
+          badge_url="https://img.shields.io/badge/coverage-$coverage_percentage%25-$badge_color"
+          echo "::set-output name=badge_url::$badge_url"
+
+      # Comment on pull request with coverage badge
+      - name: Comment on pull request with coverage badge
         run: |
           GITHUB_TOKEN="${{ secrets.GITHUB_TOKEN }}"
           owner="${{ github.repository_owner }}"
           repo="${{ github.event.repository.name }}"
           issue_number="${{ github.event.number }}"
-          coverage_percentage="${{ steps.coverage_percentage.outputs.coverage_percentage }}"
+          badge_url="${{ steps.badge_url.outputs.badge_url }}"
           
-          body="Code coverage: $coverage_percentage%"
+          body="![Code Coverage]($badge_url)"
           
           curl -X POST \
             -H "Authorization: token $GITHUB_TOKEN" \
