@@ -72,8 +72,9 @@ jobs:
           repo="${{ github.event.repository.name }}"
           issue_number="${{ github.event.number }}"
           coverage_percentage="${{ steps.coverage_percentage.outputs.coverage_percentage }}"
+          badge_url="${{ steps.badge_url.outputs.badge_url }}"
           
-          body="Code coverage: $coverage_percentage%"
+          body="![Code Coverage]($badge_url)\n\nCoverage: $coverage_percentage%"
           
           curl -X POST \
             -H "Authorization: token $GITHUB_TOKEN" \
