@@ -9,10 +9,6 @@ jobs:
   update-commit-status-check:
     runs-on: ubuntu-latest
 
-    permissions:
-      issues: write
-      pull-requests: write
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -32,6 +28,8 @@ jobs:
 
      # Update commit status check with badge URL
       - name: Update commit status check with badge URL
+        with:
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
         if: always()  # Update the commit status check even if previous steps fail
         run: |
           coverage_percentage=$(echo 60)
