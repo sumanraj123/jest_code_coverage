@@ -33,8 +33,6 @@ jobs:
      # Update commit status check with badge URL
       - name: Update commit status check with badge URL
         if: always()  # Update the commit status check even if previous steps fail
-        env:
-          GITHUB_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }} 
         run: |
           coverage_percentage=$(echo 60)
           badge_url="https://img.shields.io/badge/coverage-${coverage_percentage}%25-brightgreen"
@@ -44,6 +42,7 @@ jobs:
           git config user.email 'sumanravi1124@gmail.com'
           git add coverage_badge.md
           git commit -m "Update code coverage badge"
-          git push origin HEAD:$GITHUB_REF --token ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          git push "https://github.com/sumanraj123/jest_code_coverage.git" HEAD:$GITHUB_REF --token ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+
         
 
