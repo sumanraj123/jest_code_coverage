@@ -5,6 +5,21 @@ on:
     branches:
       - main
 
+permissions:
+  actions: write
+  checks: read
+  contents: write
+  deployments: none
+  id-token: write
+  issues: read
+  discussions: write
+  packages: none
+  pages: read
+  pull-requests: write
+  repository-projects: none
+  security-events: write
+
+
 jobs:
   update-commit-status-check:
     runs-on: ubuntu-latest
