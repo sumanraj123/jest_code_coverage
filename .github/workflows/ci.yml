@@ -52,8 +52,6 @@ jobs:
             color="brightgreen"
           else
             color="red"
-          fi
-          echo "::set-output name=badge_color::$color"
 
       # Generate badge URL
       - name: Generate badge URL
@@ -62,7 +60,6 @@ jobs:
           coverage_percentage="${{ steps.coverage_percentage.outputs.coverage_percentage }}"
           badge_color="${{ steps.badge_color.outputs.badge_color }}"
           badge_url="https://img.shields.io/badge/coverage-$coverage_percentage%25-$badge_color"
-          echo "::set-output name=badge_url::$badge_url"
 
       # Comment on pull request with coverage badge and percentage
       - name: Comment on pull request with coverage badge and percentage
