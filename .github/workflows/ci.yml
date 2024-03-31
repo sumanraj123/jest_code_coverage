@@ -64,19 +64,16 @@ jobs:
           badge_color="${{ steps.badge_color.outputs.badge_color }}"
           badge_url="https://img.shields.io/badge/coverage-$coverage_percentage%25-$badge_color"
 
-      # Comment on pull request with coverage badge and percentage
-      - name: Comment on pull request with coverage badge and percentage
+       # Comment on pull request with coverage percentage using GitHub API
+      - name: Comment on pull request with coverage percentage
         run: |
           GITHUB_TOKEN="${{ secrets.GITHUB_TOKEN }}"
           owner="${{ github.repository_owner }}"
           repo="${{ github.event.repository.name }}"
           issue_number="${{ github.event.number }}"
-          badge_url="${{ steps.badge_url.outputs.badge_url }}"
           coverage_percentage="${{ steps.coverage_percentage.outputs.coverage_percentage }}"
-
-          run: echo badge_color:${{steps.badge_url.outputs.badge_url}}
           
-          body="![Code Coverage]($badge_url)\n\nCoverage: $coverage_percentage%"
+          body="Code coverage: $coverage_percentage%"
           
           curl -X POST \
             -H "Authorization: token $GITHUB_TOKEN" \
