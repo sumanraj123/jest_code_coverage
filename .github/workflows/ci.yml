@@ -64,21 +64,25 @@ jobs:
           badge_url="https://img.shields.io/badge/coverage-$coverage_percentage%25-$badge_color"
           echo "::set-output name=badge_url::$badge_url"
 
-      # Comment on pull request with coverage badge
-      - name: Comment on pull request with coverage badge
+      # Comment on pull request with coverage badge and percentage
+      - name: Comment on pull request with coverage badge and percentage
         run: |
           GITHUB_TOKEN="${{ secrets.GITHUB_TOKEN }}"
           owner="${{ github.repository_owner }}"
           repo="${{ github.event.repository.name }}"
           issue_number="${{ github.event.number }}"
           badge_url="${{ steps.badge_url.outputs.badge_url }}"
+          coverage_percentage="${{ steps.coverage_percentage.outputs.coverage_percentage }}"
+
+          run: echo badge_color:${{steps.badge_url.outputs.badge_url}}
           
-          body="![Code Coverage]($badge_url)"
+          body="![Code Coverage]($badge_url)\n\nCoverage: $coverage_percentage%"
           
           curl -X POST \
             -H "Authorization: token $GITHUB_TOKEN" \
             -H "Accept: application/vnd.github.v3+json" \
             -d "{\"body\": \"$body\"}" \
             "https://api.github.com/repos/$owner/$repo/issues/$issue_number/comments"
+
 
       
