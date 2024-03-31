@@ -25,32 +25,39 @@ jobs:
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           files: coverage/lcov-report
 
-      - name: Comment coverage report on PR
-        if: always()  # Comment even if previous steps fail
-        uses: actions/github-script@v5
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const fs = require('fs');
-            const path = require('path');
-            const reportDir = 'coverage/lcov-report';
-            const coverageFiles = fs.readdirSync(reportDir);
-            let commentBody = '### Coverage Report\n';
-            for (const file of coverageFiles) {
-              const filePath = path.join(reportDir, file);
-              const fileContent = fs.readFileSync(filePath, 'utf8');
-              commentBody += '#### ' + file + '\n';
-              commentBody += '```html\n' + fileContent + '\n```\n';
-            }
-            try {
-              await github.issues.createComment({
-                issue_number: context.issue.number,
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                body: commentBody
-              });
-              console.log('Coverage report comment created successfully.');
-            } catch (error) {
-              console.error('Error creating coverage report comment:', error.message);
-            }
 
+      - name: Run tests with coverage
+        run: npm run coverageReport
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage-report
+          path: coverage
+
+      - name: Calculate Coverage Percentage
+        run: node calculate_coverage.js
+        id: coverage_percentage
+
+       # Use the coverage percentage output in other steps
+      - name: Display coverage
+        run: echo Coverage percentage:${{ steps.coverage_percentage.outputs.coverage_percentage}}
+
+      # Comment on pull request with coverage percentage using GitHub API
+      - name: Comment on pull request with coverage percentage
+        run: |
+          GITHUB_TOKEN="${{ secrets.GITHUB_TOKEN }}"
+          owner="${{ github.repository_owner }}"
+          repo="${{ github.event.repository.name }}"
+          issue_number="${{ github.event.number }}"
+          coverage_percentage="${{ steps.coverage_percentage.outputs.coverage_percentage }}"
+          
+          body="Code coverage: $coverage_percentage%"
+          
+          curl -X POST \
+            -H "Authorization: token $GITHUB_TOKEN" \
+            -H "Accept: application/vnd.github.v3+json" \
+            -d "{\"body\": \"$body\"}" \
+            "https://api.github.com/repos/$owner/$repo/issues/$issue_number/comments"
+
+      
