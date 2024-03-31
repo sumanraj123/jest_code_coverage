@@ -42,7 +42,7 @@ jobs:
           git config user.email 'sumanravi1124@gmail.com'
           git add coverage_badge.md
           git commit -m "Update code coverage badge"
-          git push "https://github.com/sumanraj123/jest_code_coverage.git" HEAD:$GITHUB_REF --token ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          git push "https://github.com/sumanraj123/jest_code_coverage.git" HEAD:$GITHUB_REF
 
         
 
