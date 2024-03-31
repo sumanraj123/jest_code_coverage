@@ -1,0 +1,26 @@
+name: Jest Coverage Report
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  generate-coverage:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests with coverage
+        run: npm test -- --coverage --watchAll=false
+
+      - name: Generate coverage report
+        uses: ArtiomTr/jest-coverage-report-action@v2
+        with:
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          files: coverage/lcov-report
