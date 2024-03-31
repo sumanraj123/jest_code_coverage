@@ -24,3 +24,27 @@ jobs:
         with:
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           files: coverage/lcov-report
+
+      - name: Comment coverage report on PR
+        if: always()  # Comment even if previous steps fail
+        uses: actions/github-script@v5
+        with:
+          github-token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            const reportDir = 'coverage/lcov-report';
+            const coverageFiles = fs.readdirSync(reportDir);
+            let commentBody = '### Coverage Report\n';
+            for (const file of coverageFiles) {
+              const filePath = path.join(reportDir, file);
+              const fileContent = fs.readFileSync(filePath, 'utf8');
+              commentBody += '#### ' + file + '\n';
+              commentBody += '```html\n' + fileContent + '\n```\n';
+            }
+            github.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: commentBody
+            });
