@@ -29,7 +29,7 @@ jobs:
         if: always()  # Comment even if previous steps fail
         uses: actions/github-script@v5
         with:
-          github-token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const fs = require('fs');
             const path = require('path');
@@ -42,9 +42,15 @@ jobs:
               commentBody += '#### ' + file + '\n';
               commentBody += '```html\n' + fileContent + '\n```\n';
             }
-            github.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: commentBody
-            });
+            try {
+              await github.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: commentBody
+              });
+              console.log('Coverage report comment created successfully.');
+            } catch (error) {
+              console.error('Error creating coverage report comment:', error.message);
+            }
+
