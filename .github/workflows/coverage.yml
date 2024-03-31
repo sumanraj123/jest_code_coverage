@@ -31,25 +31,6 @@ jobs:
           coverage=$(cat coverage/coverage-summary.json | jq '.total.lines.pct')
           echo "::set-output name=coverage_percentage::$coverage"
 
-      # # Determine badge color
-      # - name: Determine badge color
-      #   id: badge_color
-      #   run: |
-      #     coverage_percentage="${{ steps.coverage_percentage.outputs.coverage_percentage }}"
-      #     if [ "$coverage_percentage" -ge 80 ]; then
-      #       echo "::set-output name=color::brightgreen"
-      #     else
-      #       echo "::set-output name=color::red"
-      #     fi
-
-      # # Generate badge URL
-      # - name: Generate badge URL
-      #   id: badge_url
-      #   run: |
-      #     coverage_percentage="${{ steps.coverage_percentage.outputs.coverage_percentage }}"
-      #     color="${{ steps.badge_color.outputs.color }}"
-      #     echo "::set-output name=badge_url::https://img.shields.io/badge/coverage-${coverage_percentage}%25-$color"
-
       # Comment on PR with coverage
       - name: Jest Coverage Comment
         uses: MishaKav/jest-coverage-comment@main
