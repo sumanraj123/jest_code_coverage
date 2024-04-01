@@ -13,7 +13,7 @@ describe("sum", () => {
     expect(sub(4, 1)).toBe(3);
   });
 
-  // test("multiply", () => {
-  //   expect(multiply(2, 2)).toBe(4);
-  // });
+  test("multiply", () => {
+    expect(multiply(2, 2)).toBe(4);
+  });
 });
