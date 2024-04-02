@@ -1,0 +1,30 @@
+name: Code Coverage Report
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  code-coverage:
+    runs-on: ubuntu-latest
+    if: ${{ github.ref != 'refs/heads/main' && matrix.node-version == '14.x' && matrix.os == 'ubuntu-latest' }}
+    strategy:
+      matrix:
+        node-version: [14.x]
+        os: [ubuntu-latest]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Run tests with coverage
+        run: |
+          npm install
+          npm run coverage
+
+      - name: Generate code coverage report
+        uses: romeovs/lcov-reporter-action@v0.2.16
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          lcov-file: ./tests/coverage/lcov.info
