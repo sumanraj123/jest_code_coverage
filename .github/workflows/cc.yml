@@ -22,4 +22,5 @@ jobs:
         uses: romeovs/lcov-reporter-action@v0.2.16
         with:
           github-token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-          lcov-file: ./coverage/lcov-report/index.html
+          coverage-summary-path: coverage/lcov-report
+          comment-title: Jest Coverage Report
