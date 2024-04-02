@@ -1,7 +1,7 @@
 name: Code Coverage Report
 
 on:
-  push:
+  pull_request:
     branches:
       - main
 
