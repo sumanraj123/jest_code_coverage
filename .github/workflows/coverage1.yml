@@ -16,7 +16,7 @@ jobs:
         run: npm install
 
       - name: Run Tests
-        run: npm run coverage
+        run: npm run newCoverage
 
       - name: Generate Jest Coverage Summary
         id: coverageComment
@@ -24,6 +24,7 @@ jobs:
         with:
           github-token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           coverage-summary-path: ./coverage/coverage-summary.json
+          coverage-path: .coverage/lcov-report
 
 
       # # Comment on PR with coverage
