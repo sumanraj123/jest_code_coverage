@@ -19,10 +19,14 @@ jobs:
           npm run newCoverage
 
       - name: Generate coverage report
-        uses: ArtiomTr/jest-coverage-report-action@v2
+        # uses: ArtiomTr/jest-coverage-report-action@v2
+        # with:
+        #   token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+        #   files: coverage/lcov-report/index.html
+        uses: ziishaned/jest-reporter-action@v0.0.1
         with:
-          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-          files: coverage/lcov-report/index.html
+          github-token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          test-command: "npm run newCoverage"
 
       # Extract coverage percentage
       - name: Extract coverage percentage
