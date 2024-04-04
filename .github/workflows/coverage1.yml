@@ -1,4 +1,4 @@
-name: Jest Coverage Comment
+name: Code Coverage Report
 
 on:
   pull_request:
@@ -6,39 +6,43 @@ on:
       - main
 
 jobs:
-  coverage-comment:
+  test-and-coverage:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Run tests and calculate coverage
+      - name: Install dependencies
+        run: npm install
+
       - name: Run tests with coverage
-        run: |
-          npm install
-          npm run coverageReport
+        run: npm run newCoverage
 
-      - name: Generate coverage report
-        uses: ArtiomTr/jest-coverage-report-action@v2
+      - name: Store code coverage report as artifact
+        uses: actions/upload-artifact@v2
         with:
-          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-          files: coverage
+          name: coverage-report
+          path: coverage
 
-      # # Extract coverage percentage
-      # - name: Extract coverage percentage
-      #   id: coverage_percentage
-      #   run: |
-      #     coverage=$(cat coverage/coverage-summary.json | jq '.total.lines.pct')
-      #     echo "::set-output name=coverage_percentage::$coverage"
+      - name: Extract coverage report URL
+        id: extract-url
+        run: echo "::set-output name=url::$(echo ${{ github.server_url }}/$(echo ${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts/coverage/lcov-report/index.html))"
 
-      # # Comment on PR with coverage
-      # - name: Jest Coverage Comment
-      #   uses: MishaKav/jest-coverage-comment@main
-      #   with:
-      #     github-token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-      #     coverage-summary-path: coverage/coverage-summary.json
-      #     comment-title: Jest Coverage
-      #     status-badge-options: |
-      #       {
-      #         "coverageThreshold": 80
-      #       }
+      - name: Add comment to pull request
+        uses: actions/github-script@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { data: pullRequest } = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number
+            });
+            const comment = `Code coverage report is available [here](${process.env.url}).`;
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: comment
+            });
