@@ -16,7 +16,7 @@ jobs:
         run: npm install
 
       - name: Run Tests
-        run: npm run coverageReport
+        run: npm run coverage
 
       - name: Generate Jest Coverage Summary
         id: coverageComment
@@ -24,7 +24,7 @@ jobs:
         with:
           github-token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           hide-comment: true
-          coverage-summary-path: ./coverage/coverage-summary.json
+          coverage-summary-path: ./coverage/coverage-final.json
 
       # Extract coverage percentage
       - name: Extract coverage percentage
@@ -58,4 +58,4 @@ jobs:
           create-new-comment: false
           hide-summary: false
           coverage-title: My Coverage Title
-          coverage-path: ./coverage/coverage-summary.json
+          coverage-path: ./coverage/coverage-final.json
