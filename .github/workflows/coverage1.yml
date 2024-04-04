@@ -1,0 +1,43 @@
+name: Jest Coverage Comment
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  coverage-comment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Run tests and calculate coverage
+      - name: Run tests with coverage
+        run: |
+          npm install
+          npm run coverageReport
+      - name: Generate coverage report
+        uses: ArtiomTr/jest-coverage-report-action@v2
+        with:
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          files: coverage/lcov-report
+
+      # Extract coverage percentage
+      - name: Extract coverage percentage
+        id: coverage_percentage
+        run: |
+          coverage=$(cat coverage/coverage-summary.json | jq '.total.lines.pct')
+          echo "::set-output name=coverage_percentage::$coverage"
+
+      # Comment on PR with coverage
+      - name: Jest Coverage Comment
+        uses: MishaKav/jest-coverage-comment@main
+        with:
+          github-token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          coverage-summary-path: coverage/coverage-summary.json
+          comment-title: Jest Coverage
+          status-badge-options: |
+            {
+              "coverageThreshold": 80
+            }

@@ -10,6 +10,7 @@ const config = {
     },
   },
   collectCoverage: true,
+  reporters: ["default", ["jest-junit", { outputDirectory: "coverage" }]],
 };
 
 module.exports = config;
