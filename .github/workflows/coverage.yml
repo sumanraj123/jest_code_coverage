@@ -16,7 +16,7 @@ jobs:
       - name: Run tests with coverage
         run: |
           npm install
-          npx jest --reporters=default --reporters=jest-junit
+          npx jest --coverage | tee ./coverage.txt
 
       # - name: Generate coverage report
       #   uses: ArtiomTr/jest-coverage-report-action@v2
@@ -31,14 +31,12 @@ jobs:
       #     coverage=$(cat coverage/coverage-summary.json | jq '.total.lines.pct')
       #     echo "::set-output name=coverage_percentage::$coverage"
 
-      # Comment on PR with coverage
       - name: Jest Coverage Comment
         uses: MishaKav/jest-coverage-comment@main
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          coverage-summary-path: coverage/coverage-summary.json
-          title: Backend integration Tests
-          summary-title: integration Tests
+          coverage-summary-path: ./coverage/coverage-summary.json
+          title: My Jest Coverage Comment
+          summary-title: My Summary Title
           badge-title: Coverage
           hide-comment: false
           create-new-comment: false
@@ -46,4 +44,4 @@ jobs:
           junitxml-title: My JUnit Title
           junitxml-path: ./junit.xml
           coverage-title: My Coverage Title
-          coverage-path: coverage/coverage-summary.json
+          coverage-path: ./coverage.txt
