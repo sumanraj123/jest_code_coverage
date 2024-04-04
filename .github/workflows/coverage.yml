@@ -16,7 +16,7 @@ jobs:
       - name: Run tests with coverage
         run: |
           npm install
-          npx jest --coverage | tee ./coverage.txt
+          npm run coverageReport
 
       # - name: Generate coverage report
       #   uses: ArtiomTr/jest-coverage-report-action@v2
@@ -24,24 +24,19 @@ jobs:
       #     token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
       #     files: coverage/lcov-report
 
-      # # Extract coverage percentage
-      # - name: Extract coverage percentage
-      #   id: coverage_percentage
-      #   run: |
-      #     coverage=$(cat coverage/coverage-summary.json | jq '.total.lines.pct')
-      #     echo "::set-output name=coverage_percentage::$coverage"
-
+     
       - name: Jest Coverage Comment
         uses: MishaKav/jest-coverage-comment@main
         with:
+          github-token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           coverage-summary-path: ./coverage/coverage-summary.json
-          title: My Jest Coverage Comment
-          summary-title: My Summary Title
+          title: Code Coverage 
+          summary-title: Code Coverage summary
           badge-title: Coverage
           hide-comment: false
           create-new-comment: false
           hide-summary: false
           junitxml-title: My JUnit Title
           junitxml-path: ./junit.xml
-          coverage-title: My Coverage Title
+          coverage-title: Coverage Report
           coverage-path: ./coverage.txt
