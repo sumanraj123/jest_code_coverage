@@ -1,6 +1,7 @@
 const config = {
   verbose: true,
-  coverageReporters: ["clover", "json", "lcov", ["text", { skipFull: true }]],
+  coverageReporters: ["text-summary", "text", "lcov"],
+
   // coverageThreshold: {
   //   global: {
   //     branches: 80,

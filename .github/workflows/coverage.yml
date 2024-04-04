@@ -44,6 +44,6 @@ jobs:
           create-new-comment: false
           hide-summary: false
           junitxml-title: My JUnit Title
-          junitxml-path: ./coverage/junit.xml
+          junitxml-path: ./junit.xml
           coverage-title: My Coverage Title
-          coverage-path: ./coverage.txt
+          coverage-path: coverage/coverage-summary.json
