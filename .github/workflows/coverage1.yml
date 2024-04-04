@@ -18,14 +18,16 @@ jobs:
           npm install
           npm run newCoverage
 
-      - name: Generate coverage report
+      - name: Jest coverage Comment
+        id: coverageComment
         # uses: ArtiomTr/jest-coverage-report-action@v2
         # with:
         #   token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
         #   files: coverage/lcov-report/index.html
-        uses: ziishaned/jest-reporter-action@v0.0.1
+        uses: MishaKav/jest-coverage-comment@main
         with:
           github-token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          coverage-summary-path: coverage/coverage-summary.json
           # test-command: "npm run newCoverage"
 
       # Extract coverage percentage
@@ -34,15 +36,32 @@ jobs:
         run: |
           coverage=$(cat coverage/coverage-summary.json | jq '.total.lines.pct')
           echo "::set-output name=coverage_percentage::$coverage"
+      
+      - name: Check the output coverage
+        run: |
+          echo "Coverage Percentage - ${{ steps.coverageComment.outputs.coverage }}"
+          echo "Coverage Color - ${{ steps.coverageComment.outputs.color }}"
+          echo "Summary HTML - ${{ steps.coverageComment.outputs.summaryHtml }}"
 
-      # # Comment on PR with coverage
-      # - name: Jest Coverage Comment
-      #   uses: MishaKav/jest-coverage-comment@main
-      #   with:
-      #     github-token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-      #     coverage-summary-path: coverage/coverage-summary.json
-      #     comment-title: Jest Coverage
-      #     status-badge-options: |
-      #       {
-      #         "coverageThreshold": 80
-      #       }
+
+      # Comment on PR with coverage
+      - name: Jest Coverage Comment
+        uses: MishaKav/jest-coverage-comment@main
+        with:
+          github-token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          coverage-summary-path: coverage/coverage-summary.json
+          comment-title: Jest Coverage
+          status-badge-options: |
+            {
+              "coverageThreshold": 80
+            }
+          title: My Jest Coverage Comment
+          summary-title: My Summary Title
+          badge-title: Coverage
+          hide-comment: false
+          create-new-comment: false
+          hide-summary: false
+          junitxml-title: My JUnit Title
+          junitxml-path: ./coverage/junit.xml
+          coverage-title: My Coverage Title
+          coverage-path: ./coverage.txt
