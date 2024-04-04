@@ -12,22 +12,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Run tests and calculate coverage
-      - name: Run tests with coverage
-        run: |
-          npm install
-           npx run coverage
+      - name: Run Tests
+        run: npm run test:coverage | tee ./coverage.txt
 
-      - name: Jest coverage Comment
+      - name: Jest Coverage Comment
         id: coverageComment
-        # uses: ArtiomTr/jest-coverage-report-action@v2
-        # with:
-        #   token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-        #   files: coverage/lcov-report/index.html
         uses: MishaKav/jest-coverage-comment@main
         with:
           github-token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-          coverage-summary-path: coverage/coverage-summary.json
+          hide-comment: true
+          coverage-path: ./coverage.txt
+          junitxml-path: ./coverage/junit.xml
 
       # Extract coverage percentage
       - name: Extract coverage percentage
