@@ -32,22 +32,23 @@ jobs:
       - name: Add comment to pull request
         uses: actions/github-script@v4
         with:
-          github-token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            const { context, octokit } = require('@actions/github');
+            const { context, github } = require('@actions/github');
             const { owner, repo, issue: { number } } = context;
             
-            const pullRequest = await octokit.request('GET /repos/{owner}/{repo}/pulls/{pull_number}', {
+            const pullRequest = await github.pulls.get({
               owner,
               repo,
               pull_number: number
             });
 
             const comment = `Code coverage report is available [here](${process.env.url}).`;
-            await octokit.request('POST /repos/{owner}/{repo}/issues/{issue_number}/comments', {
+            await github.issues.createComment({
               owner,
               repo,
               issue_number: number,
               body: comment
             });
+
 
