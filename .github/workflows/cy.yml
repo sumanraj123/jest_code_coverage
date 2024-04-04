@@ -21,8 +21,7 @@ jobs:
       - name: Generate coverage report
         uses: ziishaned/jest-reporter-action@v0.0.1
         with:
-          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-          test-command: npm run coverageReport
+          github-token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           # files: coverage/lcov-report
 
       # # Extract coverage percentage
