@@ -1,4 +1,4 @@
-const sum = require("./sum");
+const { sum, sub } = require("./calculate");
 
 describe("sum", () => {
   test("adds 1 + 2 to equal 3", () => {
