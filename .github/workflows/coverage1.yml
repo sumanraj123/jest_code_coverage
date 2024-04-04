@@ -22,7 +22,7 @@ jobs:
         uses: ArtiomTr/jest-coverage-report-action@v2
         with:
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-          files: coverage/lcov-report/index.html
+          files: coverage
 
       # # Extract coverage percentage
       # - name: Extract coverage percentage
