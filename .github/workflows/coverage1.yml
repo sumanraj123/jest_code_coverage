@@ -16,7 +16,7 @@ jobs:
       - name: Run tests with coverage
         run: |
           npm install
-           npx jest --coverage --reporters=default --reporters='jest-junit'
+           npx run coverage
 
       - name: Jest coverage Comment
         id: coverageComment
@@ -28,7 +28,6 @@ jobs:
         with:
           github-token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           coverage-summary-path: coverage/coverage-summary.json
-          # test-command: "npm run newCoverage"
 
       # Extract coverage percentage
       - name: Extract coverage percentage
@@ -61,7 +60,5 @@ jobs:
           hide-comment: false
           create-new-comment: false
           hide-summary: false
-          junitxml-title: My JUnit Title
-          junitxml-path: ./coverage/junit.xml
           coverage-title: My Coverage Title
           coverage-path: ./coverage.txt
