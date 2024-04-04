@@ -16,34 +16,33 @@ jobs:
         run: npm install
 
       - name: Run Tests
-        run: npm run newCoverage
+        run: npm run coverage
 
       - name: Generate Jest Coverage Summary
         id: coverageComment
         uses: MishaKav/jest-coverage-comment@main
         with:
           github-token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-          # hide-comment: true
-          # coverage-summary-path: ./coverage/c
-          coverage-path: .coverage/lcov-report
+          coverage-summary-path: ./coverage/coverage-summary.json
 
 
-      # Comment on PR with coverage
-      - name: Jest Coverage Comment
-        uses: MishaKav/jest-coverage-comment@main
-        with:
-          github-token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-          coverage-summary-path: coverage/coverage-summary.json
-          comment-title: Jest Coverage
-          status-badge-options: |
-            {
-              "coverageThreshold": 80
-            }
-          title: My Jest Coverage Comment
-          summary-title: My Summary Title
-          badge-title: Coverage
-          hide-comment: false
-          create-new-comment: false
-          hide-summary: false
-          coverage-title: My Coverage Title
-          coverage-path: .coverage/lcov-report
+      # # Comment on PR with coverage
+      # - name: Jest Coverage Comment
+      #   uses: MishaKav/jest-coverage-comment@main
+
+      #   with:
+      #     github-token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+      #     coverage-summary-path: coverage/coverage-summary.json
+      #     comment-title: Jest Coverage
+      #     status-badge-options: |
+      #       {
+      #         "coverageThreshold": 80
+      #       }
+      #     title: My Jest Coverage Comment
+      #     summary-title: My Summary Title
+      #     badge-title: Coverage
+      #     hide-comment: false
+      #     create-new-comment: false
+      #     hide-summary: false
+      #     coverage-title: My Coverage Title
+      #     coverage-path: .coverage/lcov-report
