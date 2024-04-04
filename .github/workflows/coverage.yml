@@ -16,13 +16,13 @@ jobs:
       - name: Run tests with coverage
         run: |
           npm install
-          npm run coverageReport
+          npx jest --reporters=default --reporters=jest-junit
 
-      - name: Generate coverage report
-        uses: ArtiomTr/jest-coverage-report-action@v2
-        with:
-          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-          files: coverage/lcov-report
+      # - name: Generate coverage report
+      #   uses: ArtiomTr/jest-coverage-report-action@v2
+      #   with:
+      #     token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+      #     files: coverage/lcov-report
 
       # # Extract coverage percentage
       # - name: Extract coverage percentage
