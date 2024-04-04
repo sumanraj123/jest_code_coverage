@@ -18,11 +18,11 @@ jobs:
           npm install
           npm run coverageReport
 
-      # - name: Generate coverage report
-      #   uses: ArtiomTr/jest-coverage-report-action@v2
-      #   with:
-      #     token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-      #     files: coverage/lcov-report
+      - name: Generate coverage report
+        uses: ArtiomTr/jest-coverage-report-action@v2
+        with:
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          files: coverage/lcov-report
 
       # # Extract coverage percentage
       # - name: Extract coverage percentage
@@ -43,3 +43,7 @@ jobs:
           hide-comment: false
           create-new-comment: false
           hide-summary: false
+          junitxml-title: My JUnit Title
+          junitxml-path: ./coverage/junit.xml
+          coverage-title: My Coverage Title
+          coverage-path: ./coverage.txt

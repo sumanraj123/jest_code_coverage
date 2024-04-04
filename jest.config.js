@@ -10,6 +10,7 @@ const config = {
   //   },
   // },
   collectCoverage: true,
+  reporters: ["default", "jest-junit"],
 };
 
 module.exports = config;
