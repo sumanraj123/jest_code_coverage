@@ -7,7 +7,7 @@
     "test": "jest",
     "removeCoverage": "rm -rf coverage",
     "coverage": "jest --coverage --coverageReporters=json --outputFile=coverage/coverage-final.json",
-    "coverageReport": "jest --coverage --coverageReporters='json-summary'"
+    "coverageReport": "jest --coverage && jest --coverage --coverageReporters='json-summary' && jest --coverage --coverageReporters='text' | tee ./coverage.txt"
   },
   "keywords": [],
   "author": "",
