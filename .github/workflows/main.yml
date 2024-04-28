@@ -1,31 +1,55 @@
-name: Jest code coverage
+name: Jest Coverage Comment
 
 on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  test:
+  run-tests:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
 
       - name: Install dependencies
         run: npm install
 
-      - name: Run tests with coverage
-        run: npm run coverageReport
+      - name: Run sub tests
+        run: |
+          yarn jest -- services_test/sub.test.js
+          cp -r ./service1/coverage ./coverage/service1
+          cp -r ./service1/junit.xml ./coverage/service1
+          cp ./service1/coverage.txt ./coverage/service1/coverage.txt
 
-      - name: Upload coverage report
-        uses: actions/upload-artifact@v2
+      - name: Run sum tests
+        run: |
+          yarn jest -- services_test/sum.test.js
+          cp -r ./service2/coverage ./coverage/service2
+          cp -r ./service2/junit.xml ./coverage/service2
+          cp ./service2/coverage.txt ./coverage/service2/coverage.txt
+
+     
+      - name: Jest Coverage Comment
+        uses: MishaKav/jest-coverage-comment@main
         with:
-          name: coverage-report
-          path: coverage
-          
-      - name: Display Coverage Percentage
-        run: node calculate_coverage.js
-
-
+          github-token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          coverage-summary-path: ./coverage
+          title: Code Coverage 
+          summary-title: Code Coverage summary
+          badge-title: Coverage
+          hide-comment: false
+          create-new-comment: true
+          hide-summary: false
+          junitxml-title: My JUnit Title
+          junitxml-path: ./coverage/junit.xml
+          coverage-title: Coverage Report
+          coverage-path: ./coverage/coverage.txt
