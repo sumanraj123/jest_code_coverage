@@ -14,6 +14,9 @@ jobs:
   sum-service1:
     runs-on: ubuntu-latest
     # if: contains(github.event.pull_request.changed_files, 'services/sum/sum.js')
+
+    
+  
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -27,6 +30,9 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+
+      - name: Print GitHub Event
+        run: echo "$GITHUB_EVENT_PATH" && cat "$GITHUB_EVENT_PATH" && echo "$github.event"
 
       - name: Run service1 tests
         run: yarn jest -- services_test/sum.test.js --coverage --coverageReporters='json-summary' --coverageReporters='text' | tee ./coverage.txt
