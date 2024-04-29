@@ -18,6 +18,8 @@ jobs:
     
   
     steps:
+      - name: Debug Information
+        run:  echo "$GITHUB_EVENT_NAME"&& echo "$github.event"
       - name: Checkout repository
         uses: actions/checkout@v2
 
