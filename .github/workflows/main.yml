@@ -1,31 +1,92 @@
-name: Jest code coverage
+name: Service Tests
 
 on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
+    # paths:
+    #   - './services/*/*'
 
 jobs:
-  test:
+  sum-service1:
     runs-on: ubuntu-latest
+    # if: contains(github.event.pull_request.changed_files, 'services/sum/sum.js')
 
+    
+  
     steps:
-      - name: Checkout code
+      
+      - name: Checkout repository
         uses: actions/checkout@v2
+
+      # Add other steps for testing service 1
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
 
       - name: Install dependencies
         run: npm install
 
-      - name: Run tests with coverage
-        run: npm run coverageReport
+      - name: Print GitHub Event
+        run: echo "$GITHUB_EVENT_PATH" && cat "$GITHUB_EVENT_PATH" && echo "$github.event"
 
-      - name: Upload coverage report
-        uses: actions/upload-artifact@v2
+      - name: Debug Information
+        run:  echo "$GITHUB_EVENT_NAME"&& echo "$github.event"
+
+      - name: Run service1 tests
+        run: yarn jest -- services_test/sum.test.js --coverage --coverageReporters='json-summary' --coverageReporters='text' | tee ./coverage.txt
+
+      - name: Jest Coverage Comment
+        uses: MishaKav/jest-coverage-comment@main
         with:
-          name: coverage-report
-          path: coverage
-          
-      - name: Display Coverage Percentage
-        run: node calculate_coverage.js
+          github-token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          coverage-summary-path: ./coverage/coverage-summary.json
+          title: Code Coverage 
+          summary-title: Code Coverage summary
+          badge-title: Coverage
+          hide-comment: false
+          create-new-comment: true
+          hide-summary: false
+          junitxml-title: My JUnit Title
+          junitxml-path: ./service1/junit.xml
 
+  sub-service1:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' && contains(github.event.pull_request.changed_files, 'services/sub/***')
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
+      # Add other steps for testing service 2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run service1 tests
+        run: yarn jest -- services_test/sub.test.js --coverage --coverageReporters='json-summary' --coverageReporters='text' | tee ./coverage.txt
+
+      - name: Jest Coverage Comment
+        uses: MishaKav/jest-coverage-comment@main
+        with:
+          github-token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          coverage-summary-path: ./coverage/coverage-summary.json
+          title: Code Coverage 
+          summary-title: Code Coverage summary
+          badge-title: Coverage
+          hide-comment: false
+          create-new-comment: true
+          hide-summary: false
+          junitxml-title: My JUnit Title
+          junitxml-path: ./service1/junit.xml
+    
+    
