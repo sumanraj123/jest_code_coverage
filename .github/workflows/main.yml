@@ -7,8 +7,8 @@ on:
   pull_request:
     branches:
       - main
-    # paths:
-    #   - ''
+    paths:
+      - './services/*/*'
 
 jobs:
   sum-service1:
