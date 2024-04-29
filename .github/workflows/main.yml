@@ -18,8 +18,7 @@ jobs:
     
   
     steps:
-      - name: Debug Information
-        run:  echo "$GITHUB_EVENT_NAME"&& echo "$github.event"
+      
       - name: Checkout repository
         uses: actions/checkout@v2
 
@@ -35,6 +34,9 @@ jobs:
 
       - name: Print GitHub Event
         run: echo "$GITHUB_EVENT_PATH" && cat "$GITHUB_EVENT_PATH" && echo "$github.event"
+
+      - name: Debug Information
+        run:  echo "$GITHUB_EVENT_NAME"&& echo "$github.event"
 
       - name: Run service1 tests
         run: yarn jest -- services_test/sum.test.js --coverage --coverageReporters='json-summary' --coverageReporters='text' | tee ./coverage.txt
