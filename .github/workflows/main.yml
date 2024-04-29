@@ -7,13 +7,13 @@ on:
   pull_request:
     branches:
       - main
-    paths:
-      - './services/*/*'
+    # paths:
+    #   - './services/*/*'
 
 jobs:
   sum-service1:
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' && contains(github.event.pull_request.changed_files, 'services/sum/***')
+    if: github.event_name == 'pull_request' && contains(github.event.pull_request.changed_files, 'services/sum/sum.js')
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
